@@ -1,7 +1,7 @@
 package com.example.backend.controllers;
 
-import com.example.backend.domain.Bus;
-import com.example.backend.domain.BusService;
+import com.example.backend.domain.bus.Bus;
+import com.example.backend.domain.bus.BusService;
 import com.example.backend.dtos.CreateBusDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

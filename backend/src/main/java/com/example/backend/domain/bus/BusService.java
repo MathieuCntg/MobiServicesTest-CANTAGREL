@@ -1,4 +1,4 @@
-package com.example.backend.domain;
+package com.example.backend.domain.bus;
 
 import java.time.LocalDate;
 

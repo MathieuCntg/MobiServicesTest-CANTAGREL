@@ -1,8 +1,8 @@
 package com.example.backend.controllers;
 
-import com.example.backend.domain.bus.Bus;
-import com.example.backend.domain.bus.BusService;
-import com.example.backend.dtos.CreateBusDTO;
+import com.example.backend.domain.client.Client;
+import com.example.backend.domain.client.ClientService;
+import com.example.backend.dtos.CreateClientDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +11,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BusController.class)
-class BusControllerTest {
+@WebMvcTest(ClientController.class)
+class ClientControllerTest {
 
     @MockBean
-    private BusService busService;
+    private ClientService clientService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,25 +30,25 @@ class BusControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String SERVER_URI = "/busses";
+    private final String SERVER_URI = "/clients";
 
     @Test
-    void shouldCreateBus() throws Exception {
+    void shouldCreateClient() throws Exception {
         final var id = UUID.randomUUID();
-        final var departureDate = LocalDate.now();
-        final var seats = 1;
-        final var price = 1.05;
+        final var name = "John Doe";
+        final var email = "john@email.com";
 
-        final var expectedBus = new Bus(id, departureDate, seats, price);
+        final var expectedClient = new Client(id, name, email);
 
-        when(busService.create(departureDate, seats, price)).thenReturn(expectedBus);
+        when(clientService.create(email, name)).thenReturn(expectedClient);
 
         mockMvc.perform(
                         post(SERVER_URI)
-                                .content(objectMapper.writeValueAsString(new CreateBusDTO(departureDate, seats, price)))
+                                .content(objectMapper.writeValueAsString(new CreateClientDTO(email, name)))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedBus), true));
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedClient), true));
     }
+
 }

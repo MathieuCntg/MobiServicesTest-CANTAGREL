@@ -1,6 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.domain.Bus;
+import com.example.backend.domain.bus.Bus;
 import com.example.backend.repository.BusJPARepository;
 import com.example.backend.repository.entities.BusEntity;
 import org.junit.jupiter.api.Test;
