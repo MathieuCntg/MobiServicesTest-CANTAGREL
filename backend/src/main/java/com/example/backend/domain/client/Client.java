@@ -1,6 +1,9 @@
 package com.example.backend.domain.client;
 
+import com.example.backend.domain.reservation.Reservation;
+
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 public class Client {
@@ -11,10 +14,13 @@ public class Client {
 
     private final String email;
 
-    public Client(UUID id, String name, String email) {
+    private final Set<Reservation> reservations;
+
+    public Client(UUID id, String name, String email, Set<Reservation> reservations) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.reservations = reservations;
     }
 
     public UUID getId() {
@@ -27,6 +33,10 @@ public class Client {
 
     public String getEmail() {
         return email;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
     }
 
     @Override

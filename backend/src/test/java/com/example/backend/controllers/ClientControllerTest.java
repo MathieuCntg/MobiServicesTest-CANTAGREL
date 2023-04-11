@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -38,7 +39,7 @@ class ClientControllerTest {
         final var name = "John Doe";
         final var email = "john@email.com";
 
-        final var expectedClient = new Client(id, name, email);
+        final var expectedClient = new Client(id, name, email, Collections.emptySet());
 
         when(clientService.create(email, name)).thenReturn(expectedClient);
 
