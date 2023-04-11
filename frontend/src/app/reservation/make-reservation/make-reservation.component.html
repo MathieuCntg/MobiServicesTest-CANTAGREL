@@ -1,0 +1,12 @@
+<form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+  <label for="departureDate">Departure Date:</label>
+  <input type="date" id="departureDate" formControlName="departureDate">
+
+  <label for="clientID">Client ID:</label>
+  <input type="text" id="clientID" formControlName="clientID">
+
+  <label for="bussesIds">Bus IDs:</label>
+  <input type="text" id="bussesIds" formControlName="bussesIds">
+
+  <button type="submit">Create Reservation</button>
+</form>
