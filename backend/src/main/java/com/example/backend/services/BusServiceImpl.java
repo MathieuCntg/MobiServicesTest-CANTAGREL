@@ -36,6 +36,11 @@ public class BusServiceImpl implements BusService {
         return jpaRepository.findById(id).map(this::convertBusEntityToBus);
     }
 
+    @Override
+    public void deleteBusById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
+
     private Bus convertBusEntityToBus(BusEntity busEntity) {
         return new Bus(busEntity.getId(), busEntity.getDepartureDate(), busEntity.getSeats(), busEntity.getPrice());
     }

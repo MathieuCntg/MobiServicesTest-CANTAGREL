@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -75,6 +76,15 @@ class BusServiceImplTest {
         final var actual = busService.getById(id);
 
         assertEquals(expectedBus, actual);
+    }
+
+    @Test
+    void shouldDeleteBusById() {
+        final var id = UUID.randomUUID();
+
+        busService.deleteBusById(id);
+
+        verify(busRepository).deleteById(id);
     }
 
 }

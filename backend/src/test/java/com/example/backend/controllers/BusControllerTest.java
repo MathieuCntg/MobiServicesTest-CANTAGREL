@@ -98,4 +98,14 @@ class BusControllerTest {
                 )
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void shouldDeleteBusById() throws Exception {
+        final var id = UUID.randomUUID();
+
+        mockMvc.perform(
+                        delete(SERVER_URI+"/"+id)
+                )
+                .andExpect(status().isNoContent());
+    }
 }

@@ -12,4 +12,5 @@ public interface BusService {
 
     Optional<Bus> getById(UUID id);
 
+    void deleteBusById(UUID id);
 }
