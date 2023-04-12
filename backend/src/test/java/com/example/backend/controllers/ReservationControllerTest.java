@@ -19,8 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,6 +69,16 @@ class ReservationControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedReservationList), true));
+    }
+
+    @Test
+    void shouldDeleteByID() throws Exception {
+        final var id = UUID.randomUUID();
+
+        mockMvc.perform(
+                        delete(SERVER_URI+"/"+id)
+                )
+                .andExpect(status().isNoContent());
     }
 
 }

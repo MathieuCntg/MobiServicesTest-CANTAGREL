@@ -11,4 +11,6 @@ public interface ReservationService {
 
     List<Reservation> getAll();
 
+    void deleteById(UUID id);
+
 }

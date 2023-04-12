@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/reservations")
@@ -28,5 +29,11 @@ public class ReservationController {
     @GetMapping
     public List<Reservation> getAll() {
         return reservationService.getAll();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByID(@PathVariable UUID id) {
+        reservationService.deleteById(id);
     }
 }

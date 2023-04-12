@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -80,5 +81,14 @@ class ReservationServiceImplTest {
         final var actual = reservationService.getAll();
 
         assertEquals(expectedReservationList, actual);
+    }
+
+    @Test
+    void shouldDeleteById() {
+        final var reservationId = UUID.randomUUID();
+
+        reservationJPARepository.deleteById(reservationId);
+
+        verify(reservationJPARepository).deleteById(reservationId);
     }
 }

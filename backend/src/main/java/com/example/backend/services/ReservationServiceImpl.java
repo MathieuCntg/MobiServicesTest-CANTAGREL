@@ -43,6 +43,11 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationJPARepository.findAll().stream().map(this::convertReservationEntityToReservation).toList();
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        reservationJPARepository.deleteById(id);
+    }
+
     private Reservation convertReservationEntityToReservation(ReservationEntity reservationEntity) {
         return new Reservation(reservationEntity.getId(), reservationEntity.getClient().getId(), reservationEntity.getDepartureDate(), reservationEntity.getBusses().stream().map(this::convertBusEntityToBus).collect(Collectors.toSet()));
     }
