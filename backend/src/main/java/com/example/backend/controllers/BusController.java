@@ -6,6 +6,8 @@ import com.example.backend.dtos.CreateBusDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/busses")
 public class BusController {
@@ -20,6 +22,11 @@ public class BusController {
     @ResponseStatus(HttpStatus.CREATED)
     public Bus createBus(@RequestBody CreateBusDTO createBusDTO) {
         return busService.create(createBusDTO.departureDate(), createBusDTO.seats(), createBusDTO.price());
+    }
+
+    @GetMapping
+    public List<Bus> getAllBusses() {
+        return busService.getAll();
     }
 
 }

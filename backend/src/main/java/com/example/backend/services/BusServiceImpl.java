@@ -7,6 +7,7 @@ import com.example.backend.repository.entities.BusEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BusServiceImpl implements BusService {
@@ -21,6 +22,11 @@ public class BusServiceImpl implements BusService {
     public Bus create(LocalDate departureDate, int seats, double price) {
         final var busEntity = new BusEntity(departureDate, seats, calculatePrice(price));
         return convertBusEntityToBus(jpaRepository.save(busEntity));
+    }
+
+    @Override
+    public List<Bus> getAll() {
+        return jpaRepository.findAll().stream().map(this::convertBusEntityToBus).toList();
     }
 
     private Bus convertBusEntityToBus(BusEntity busEntity) {

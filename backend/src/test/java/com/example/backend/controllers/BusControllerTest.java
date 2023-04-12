@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,5 +53,18 @@ class BusControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedBus), true));
+    }
+
+    @Test
+    void shouldGetAllBusses() throws Exception {
+        final var expectedBusList = List.of(new Bus(UUID.randomUUID(), LocalDate.now(), 1, 1.05));
+
+        when(busService.getAll()).thenReturn(expectedBusList);
+
+        mockMvc.perform(
+                        get(SERVER_URI)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedBusList), true));
     }
 }
