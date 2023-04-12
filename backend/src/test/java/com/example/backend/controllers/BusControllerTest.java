@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -66,5 +67,35 @@ class BusControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedBusList), true));
+    }
+
+    @Test
+    void shouldGetBusById() throws Exception {
+        final var id = UUID.randomUUID();
+        final var departureDate = LocalDate.now();
+        final var seats = 1;
+        final var price = 1.05;
+
+        final var expectedBus = new Bus(id, departureDate, seats, price);
+
+        when(busService.getById(id)).thenReturn(Optional.of(expectedBus));
+
+        mockMvc.perform(
+                        get(SERVER_URI+"/"+id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedBus), true));
+    }
+
+    @Test
+    void shouldGet404WhenGettingNonExistingBus() throws Exception {
+        final var id = UUID.randomUUID();
+
+        when(busService.getById(id)).thenReturn(Optional.empty());
+
+        mockMvc.perform(
+                        get(SERVER_URI+"/"+id)
+                )
+                .andExpect(status().isNotFound());
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,6 +58,23 @@ class BusServiceImplTest {
         final var actual = busService.getAll();
 
         assertEquals(expectedBusList, actual);
+    }
+
+    @Test
+    void shouldGetBusById() {
+        final var id = UUID.randomUUID();
+        final var departureDate = LocalDate.now();
+        final var seats = 1;
+        final var price = 1.05;
+
+        final var expectedBus = Optional.of(new Bus(id, departureDate, seats, price));
+        final var mayBeBusEntity = Optional.of(new BusEntity(id, departureDate, seats, price));
+
+        when(busRepository.findById(id)).thenReturn(mayBeBusEntity);
+
+        final var actual = busService.getById(id);
+
+        assertEquals(expectedBus, actual);
     }
 
 }

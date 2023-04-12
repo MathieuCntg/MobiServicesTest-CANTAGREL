@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BusServiceImpl implements BusService {
@@ -27,6 +29,11 @@ public class BusServiceImpl implements BusService {
     @Override
     public List<Bus> getAll() {
         return jpaRepository.findAll().stream().map(this::convertBusEntityToBus).toList();
+    }
+
+    @Override
+    public Optional<Bus> getById(UUID id) {
+        return jpaRepository.findById(id).map(this::convertBusEntityToBus);
     }
 
     private Bus convertBusEntityToBus(BusEntity busEntity) {
