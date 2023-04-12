@@ -4,6 +4,7 @@ import com.example.backend.domain.bus.Bus;
 import com.example.backend.domain.reservation.PaymentMethod;
 import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.domain.reservation.ReservationService;
+import com.example.backend.exceptions.NotFoundException;
 import com.example.backend.repository.BusJPARepository;
 import com.example.backend.repository.ClientJPARepository;
 import com.example.backend.repository.ReservationJPARepository;
@@ -22,6 +23,9 @@ public class ReservationServiceImpl implements ReservationService {
     private final BusJPARepository busJPARepository;
     private final ClientJPARepository clientJPARepository;
 
+    private final String NOT_FOUND_MESSAGE_RESERVATION = "Reservation not found";
+    private final String NOT_FOUND_MESSAGE_CLIENT = "Client not found";
+
     public ReservationServiceImpl(ReservationJPARepository reservationJPARepository, BusJPARepository busJPARepository, ClientJPARepository clientJPARepository) {
         this.reservationJPARepository = reservationJPARepository;
         this.busJPARepository = busJPARepository;
@@ -29,11 +33,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation create(LocalDate departureDate, UUID clientID, Set<UUID> bussesIds) {
+    public Reservation create(LocalDate departureDate, UUID clientID, Set<UUID> bussesIds) throws NotFoundException {
         final var busses = busJPARepository.findAllById(bussesIds);
         final var client = clientJPARepository.findById(clientID);
 
-        return convertReservationEntityToReservation(reservationJPARepository.save(new ReservationEntity(client.orElseThrow(), departureDate, new HashSet<>(busses), null)));
+        return convertReservationEntityToReservation(reservationJPARepository.save(new ReservationEntity(client.orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE_CLIENT)), departureDate, new HashSet<>(busses), null)));
     }
 
     @Override
@@ -47,11 +51,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation pay(UUID id, PaymentMethod paymentMethod) {
+    public Reservation pay(UUID id, PaymentMethod paymentMethod) throws NotFoundException {
 
         final var maybeReservation = reservationJPARepository.findById(id);
 
-        final var reservation = maybeReservation.orElseThrow();
+        final var reservation = maybeReservation.orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE_RESERVATION));
 
         return convertReservationEntityToReservation(reservationJPARepository.save(new ReservationEntity(reservation.getId(), reservation.getClient(), reservation.getDepartureDate(), reservation.getBusses(), paymentMethod)));
     }

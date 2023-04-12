@@ -3,6 +3,7 @@ package com.example.backend.services;
 import com.example.backend.domain.bus.Bus;
 import com.example.backend.domain.reservation.PaymentMethod;
 import com.example.backend.domain.reservation.Reservation;
+import com.example.backend.exceptions.NotFoundException;
 import com.example.backend.repository.BusJPARepository;
 import com.example.backend.repository.ClientJPARepository;
 import com.example.backend.repository.ReservationJPARepository;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,6 +63,17 @@ class ReservationServiceImplTest {
         final var actual = reservationService.create(departureDate, clientId, busIdSet);
 
         assertEquals(expectedReservation, actual);
+    }
+
+    @Test
+    void shouldThrowNotFoundExceptionWhenCreatingReservationWithNonExistingClient() {
+        final var clientId = UUID.randomUUID();
+        final var busIdSet = new HashSet<>(List.of(UUID.randomUUID()));
+        final var departureDate = LocalDate.now();
+
+        when(clientJPARepository.findById(clientId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> reservationService.create(departureDate, clientId, busIdSet));
     }
 
     @Test
@@ -114,6 +127,15 @@ class ReservationServiceImplTest {
         final var actual = reservationService.pay(reservationId, paymentMethod);
 
         assertEquals(expectedReservation, actual);
+    }
+
+    @Test
+    void shouldThrowNotFoundExceptionWhenPayingNonexistentReservation() {
+        final var reservationId = UUID.randomUUID();
+
+        when(reservationJPARepository.findById(reservationId)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> reservationService.pay(reservationId, PaymentMethod.PAYPAL));
     }
 
     @Test

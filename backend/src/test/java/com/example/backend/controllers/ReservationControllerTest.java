@@ -6,6 +6,7 @@ import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.domain.reservation.ReservationService;
 import com.example.backend.dtos.CreateReservationDTO;
 import com.example.backend.dtos.PayReservationDTO;
+import com.example.backend.exceptions.NotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,22 @@ class ReservationControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedReservation), true));
+    }
+
+    @Test
+    void shouldGet404WhenCreatingReservationWithNonExistingClient() throws Exception {
+        final var departureDate = LocalDate.now();
+        final var clientId = UUID.randomUUID();
+        final Set<UUID> bussesIds = Collections.emptySet();
+
+        when(reservationService.create(departureDate, clientId, bussesIds)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(
+                        post(SERVER_URI)
+                                .content(objectMapper.writeValueAsString(new CreateReservationDTO(departureDate, clientId, bussesIds)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNotFound());
     }
 
     @Test
