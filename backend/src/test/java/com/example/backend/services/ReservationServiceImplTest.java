@@ -60,4 +60,25 @@ class ReservationServiceImplTest {
 
         assertEquals(expectedReservation, actual);
     }
+
+    @Test
+    void shouldGetAll() {
+        final var reservationId = UUID.randomUUID();
+        final var clientEntity = new ClientEntity(UUID.randomUUID(), "John", "email", Collections.emptySet());
+        final var departureDate = LocalDate.now();
+        final var busEntity = new BusEntity(UUID.randomUUID(), LocalDate.now(), 1, 1.05);
+        final var bus = new Bus(busEntity.getId(), busEntity.getDepartureDate(), busEntity.getSeats(), busEntity.getPrice());
+
+        final var reservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)));
+        final var reservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)));
+
+        final var reservationEntityList = List.of(reservationEntity);
+        final var expectedReservationList = List.of(reservation);
+
+        when(reservationJPARepository.findAll()).thenReturn(reservationEntityList);
+
+        final var actual = reservationService.getAll();
+
+        assertEquals(expectedReservationList, actual);
+    }
 }

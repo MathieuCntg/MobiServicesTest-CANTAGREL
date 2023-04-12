@@ -6,6 +6,8 @@ import com.example.backend.dtos.CreateReservationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/reservations")
 @CrossOrigin(origins = "*")
@@ -21,5 +23,10 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.CREATED)
     public Reservation create(@RequestBody CreateReservationDTO createReservationDTO) throws Exception {
         return reservationService.create(createReservationDTO.departureDate(), createReservationDTO.clientID(), createReservationDTO.bussesIds());
+    }
+
+    @GetMapping
+    public List<Reservation> getAll() {
+        return reservationService.getAll();
     }
 }

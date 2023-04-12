@@ -14,10 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,6 +57,19 @@ class ReservationControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedReservation), true));
+    }
+
+    @Test
+    void shouldGetAll() throws Exception {
+        final var expectedReservationList = List.of(new Reservation(UUID.randomUUID(), UUID.randomUUID(), LocalDate.now(), Collections.emptySet()));
+
+        when(reservationService.getAll()).thenReturn(expectedReservationList);
+
+        mockMvc.perform(
+                        get(SERVER_URI)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedReservationList), true));
     }
 
 }
