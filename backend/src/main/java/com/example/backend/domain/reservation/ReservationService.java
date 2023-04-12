@@ -2,6 +2,7 @@ package com.example.backend.domain.reservation;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,4 +15,6 @@ public interface ReservationService {
     void deleteById(UUID id);
 
     Reservation pay(UUID id, PaymentMethod paymentMethod);
+
+    Optional<Reservation> getById(UUID id);
 }

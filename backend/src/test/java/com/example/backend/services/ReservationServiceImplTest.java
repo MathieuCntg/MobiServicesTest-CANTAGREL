@@ -115,4 +115,22 @@ class ReservationServiceImplTest {
 
         assertEquals(expectedReservation, actual);
     }
+
+    @Test
+    void shouldGetById() {
+        final var reservationId = UUID.randomUUID();
+        final var clientEntity = new ClientEntity(UUID.randomUUID(), "John", "email", Collections.emptySet());
+        final var departureDate = LocalDate.now();
+        final var busEntity = new BusEntity(UUID.randomUUID(), LocalDate.now(), 1, 1.05);
+        final var bus = new Bus(busEntity.getId(), busEntity.getDepartureDate(), busEntity.getSeats(), busEntity.getPrice());
+
+        final var reservationEntity = Optional.of(new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)), null));
+        final var expectedReservation = Optional.of(new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)), null));
+
+        when(reservationJPARepository.findById(reservationId)).thenReturn(reservationEntity);
+
+        final var actual = reservationService.getById(reservationId);
+
+        assertEquals(expectedReservation, actual);
+    }
 }

@@ -103,4 +103,29 @@ class ReservationControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedReservation), true));
     }
 
+    @Test
+    void shouldGetById() throws Exception {
+        final var reservationId = UUID.randomUUID();
+        final var expectedReservation = Optional.of(new Reservation(reservationId, UUID.randomUUID(), LocalDate.now(), Collections.emptySet(), PaymentMethod.PAYPAL));
+
+        when(reservationService.getById(reservationId)).thenReturn(expectedReservation);
+
+        mockMvc.perform(
+                        get(SERVER_URI + '/' + reservationId)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedReservation), true));
+    }
+
+    @Test
+    void shouldGet404StatusWhenGettingNonExistingReservation() throws Exception {
+        final var reservationId = UUID.randomUUID();
+
+        when(reservationService.getById(reservationId)).thenReturn(Optional.empty());
+
+        mockMvc.perform(
+                        get(SERVER_URI + '/' + reservationId)
+                )
+                .andExpect(status().isNotFound());
+    }
 }

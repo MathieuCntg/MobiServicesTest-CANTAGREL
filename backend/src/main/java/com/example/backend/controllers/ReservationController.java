@@ -5,6 +5,7 @@ import com.example.backend.domain.reservation.ReservationService;
 import com.example.backend.dtos.CreateReservationDTO;
 import com.example.backend.dtos.PayReservationDTO;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,5 +42,10 @@ public class ReservationController {
     @PostMapping("/{id}/pay")
     public Reservation pay(@PathVariable UUID id, @RequestBody PayReservationDTO payReservationDTO) {
         return reservationService.pay(id, payReservationDTO.paymentMethod());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> getById(@PathVariable UUID id) {
+        return ResponseEntity.of(reservationService.getById(id));
     }
 }
