@@ -10,5 +10,11 @@
   <div>
     <span>id: {{reservation.id}}</span>
   </div>
+  <div>
+    <span *ngIf="reservation.paymentMethod; else elseNotPaid">payment method: {{reservation.paymentMethod}}</span>
+    <ng-template #elseNotPaid>
+      <span>not paid</span>
+    </ng-template>
+  </div>
   <button (click)="onDelete.emit(reservation.id)">delete</button>
 </div>

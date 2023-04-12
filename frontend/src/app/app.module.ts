@@ -9,6 +9,9 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { ListComponent } from './reservation/list/list.component';
 import { ReservationComponent } from './reservation/reservation.component';
+import { PayComponent } from './reservation/pay/pay.component';
+import { PaypalComponent } from './reservation/pay/paypal/paypal.component';
+import { CreditCardComponent } from './reservation/pay/credit-card/credit-card.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { ReservationComponent } from './reservation/reservation.component';
     HomeComponent,
     MakeReservationComponent,
     ListComponent,
-    ReservationComponent
+    ReservationComponent,
+    PayComponent,
+    PaypalComponent,
+    CreditCardComponent
   ],
   imports: [
     HttpClientModule,

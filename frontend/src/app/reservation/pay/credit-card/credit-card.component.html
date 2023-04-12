@@ -1,0 +1,15 @@
+<h2>Pay by credit card</h2>
+
+<form [formGroup]="creditCardForm" (ngSubmit)="onSubmit()">
+
+  <label for="reservationId">reservationId: </label>
+  <input type="text" id="reservationId" formControlName="reservationId">
+
+  <label for="creditCardNumber">credit card number: </label>
+  <input type="text" id="creditCardNumber" formControlName="creditCardNumber">
+
+  <label for="creditCardExpirationDate">credit card expiration date: </label>
+  <input type="date" id="creditCardExpirationDate" formControlName="creditCardNumber">
+
+  <button type="submit">pay by credit card</button>
+</form>

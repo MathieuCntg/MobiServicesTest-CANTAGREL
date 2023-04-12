@@ -1,0 +1,12 @@
+<h2>Pay with paypal</h2>
+
+<form [formGroup]="paypalForm" (ngSubmit)="onSubmit()">
+
+  <label for="reservationId">reservationId: </label>
+  <input type="text" id="reservationId" formControlName="reservationId">
+
+  <label for="email">email: </label>
+  <input type="email" id="email" formControlName="email">
+
+  <button type="submit">pay with paypal</button>
+</form>
