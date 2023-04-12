@@ -22,4 +22,8 @@ export class ReservationService {
   list():Observable<ReservationModel[]> {
     return this.http.get<ReservationModel[]>(`${environment.backendUrl}/reservations`)
   }
+
+  deleteReservation(reservationId: string): Observable<void>{
+    return this.http.delete<void>(`${environment.backendUrl}/reservations/${reservationId}`)
+  }
 }

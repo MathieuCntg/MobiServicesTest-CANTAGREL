@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ReservationService} from "../service/reservation.service";
 import {ReservationModel} from "../../models/Reservation.model";
+import {switchMap} from "rxjs";
 
 @Component({
   selector: 'app-list',
@@ -14,5 +15,14 @@ export class ListComponent {
     this.reservationService.list().subscribe({
       next: value => this.reservations = value,
     });
+  }
+
+  deleteReservation(reservationId: string) {
+    this.reservationService.deleteReservation(reservationId).pipe(
+      switchMap(() => this.reservationService.list())
+    ).subscribe({
+      next: value => this.reservations = value,
+    });
+
   }
 }
