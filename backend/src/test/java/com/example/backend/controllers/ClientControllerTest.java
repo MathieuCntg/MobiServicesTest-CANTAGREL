@@ -12,9 +12,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +52,33 @@ class ClientControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedClient), true));
+    }
+
+    @Test
+    void shouldGetClientById() throws Exception {
+        final var id = UUID.randomUUID();
+
+        final var expectedClient = Optional.of(new Client(id, "John Doe", "john@email.com", Collections.emptySet()));
+
+        when(clientService.getById(id)).thenReturn(expectedClient);
+
+        mockMvc.perform(
+                        get(SERVER_URI + '/' + id)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedClient), true));
+    }
+
+    @Test
+    void shouldGet404WhenGettingNonExistingClient() throws Exception {
+        final var id = UUID.randomUUID();
+
+        when(clientService.getById(id)).thenReturn(Optional.empty());
+
+        mockMvc.perform(
+                        get(SERVER_URI + '/' + id)
+                )
+                .andExpect(status().isNotFound());
     }
 
 }

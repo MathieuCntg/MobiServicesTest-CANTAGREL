@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,12 +38,29 @@ class ClientServiceImplTest {
         final Set<ReservationEntity> reservationEntities = Collections.emptySet();
         final var clientEntity = new ClientEntity(id, name, email, reservationEntities);
 
-
         final var expectedClient = new Client(id, name, email, reservations);
 
         when(clientJPARepository.save(Mockito.any(ClientEntity.class))).thenReturn(clientEntity);
 
         final var actual = clientService.create(email, name);
+
+        assertEquals(expectedClient, actual);
+    }
+
+    @Test
+    void shouldGetClientById() {
+        final var id = UUID.randomUUID();
+        final var name = "John Doe";
+        final var email = "john@email.com";
+        final Set<Reservation> reservations = Collections.emptySet();
+        final Set<ReservationEntity> reservationEntities = Collections.emptySet();
+        final var clientEntity = Optional.of(new ClientEntity(id, name, email, reservationEntities));
+
+        final var expectedClient = Optional.of(new Client(id, name, email, reservations));
+
+        when(clientJPARepository.findById(id)).thenReturn(clientEntity);
+
+        final var actual = clientService.getById(id);
 
         assertEquals(expectedClient, actual);
     }

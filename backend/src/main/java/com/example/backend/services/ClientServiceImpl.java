@@ -10,6 +10,8 @@ import com.example.backend.repository.entities.ClientEntity;
 import com.example.backend.repository.entities.ReservationEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +25,11 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client create(String email, String name) {
         return convertClientEntityToClient(clientJPARepository.save(new ClientEntity(email, name)));
+    }
+
+    @Override
+    public Optional<Client> getById(UUID id) {
+        return clientJPARepository.findById(id).map(this::convertClientEntityToClient);
     }
 
     private Client convertClientEntityToClient(ClientEntity clientEntity) {
