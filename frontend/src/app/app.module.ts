@@ -7,12 +7,16 @@ import { HomeComponent } from './home/home.component';
 import { MakeReservationComponent } from './reservation/make-reservation/make-reservation.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { ListComponent } from './reservation/list/list.component';
+import { ReservationComponent } from './reservation/reservation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    MakeReservationComponent
+    MakeReservationComponent,
+    ListComponent,
+    ReservationComponent
   ],
   imports: [
     HttpClientModule,

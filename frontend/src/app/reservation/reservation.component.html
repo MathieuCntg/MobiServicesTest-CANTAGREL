@@ -1,0 +1,13 @@
+<span>departure date: {{reservation.departureDate}}</span>
+<div>
+  <h3>busses: </h3>
+  <span *ngIf="reservation.busses.length === 0">no busses</span>
+  <div *ngFor="let bus of reservation.busses">
+    <span>departure date: {{bus.departureDate}}</span>
+    <span>seat: {{bus.seats}}</span>
+    <span>price: {{bus.price}}</span>
+  </div>
+  <div>
+    <span>id: {{reservation.id}}</span>
+  </div>
+</div>

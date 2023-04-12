@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {NonNullableFormBuilder, Validators} from "@angular/forms";
-import {ReservationService} from "../reservation.service";
+import {ReservationService} from "../service/reservation.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -22,7 +22,7 @@ export class MakeReservationComponent {
   onSubmit() {
     const { departureDate, clientID, bussesIds} = this.reservationForm.value;
     this.reservationService.makeReservation(new Date(departureDate!), clientID!, [bussesIds!]).subscribe({
-      next: value => console.log(value)
+      next: () => this.router.navigateByUrl("/list")
     })
   }
 }
