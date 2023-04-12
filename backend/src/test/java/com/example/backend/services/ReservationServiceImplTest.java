@@ -1,6 +1,7 @@
 package com.example.backend.services;
 
 import com.example.backend.domain.bus.Bus;
+import com.example.backend.domain.reservation.PaymentMethod;
 import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.repository.BusJPARepository;
 import com.example.backend.repository.ClientJPARepository;
@@ -50,8 +51,8 @@ class ReservationServiceImplTest {
         final var bus = new Bus(busId, departureDate, busEntity.getSeats(), busEntity.getPrice());
         final var busIdSet = new HashSet<>(List.of(busId));
 
-        final var reservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)));
-        final var expectedReservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)));
+        final var reservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)), null);
+        final var expectedReservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)), null);
 
         when(busJPARepository.findAllById(busIdSet)).thenReturn(List.of(busEntity));
         when(clientJPARepository.findById(clientId)).thenReturn(Optional.of(clientEntity));
@@ -70,8 +71,8 @@ class ReservationServiceImplTest {
         final var busEntity = new BusEntity(UUID.randomUUID(), LocalDate.now(), 1, 1.05);
         final var bus = new Bus(busEntity.getId(), busEntity.getDepartureDate(), busEntity.getSeats(), busEntity.getPrice());
 
-        final var reservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)));
-        final var reservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)));
+        final var reservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, new HashSet<>(List.of(busEntity)), null);
+        final var reservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)), null);
 
         final var reservationEntityList = List.of(reservationEntity);
         final var expectedReservationList = List.of(reservation);
@@ -90,5 +91,28 @@ class ReservationServiceImplTest {
         reservationJPARepository.deleteById(reservationId);
 
         verify(reservationJPARepository).deleteById(reservationId);
+    }
+
+    @Test
+    void shouldPay() {
+        final var reservationId = UUID.randomUUID();
+        final var clientEntity = new ClientEntity(UUID.randomUUID(), "John", "email", Collections.emptySet());
+        final var departureDate = LocalDate.now();
+        final var busEntity = new BusEntity(UUID.randomUUID(), LocalDate.now(), 1, 1.05);
+        final var busEntityList = new HashSet<>(List.of(busEntity));
+        final var bus = new Bus(busEntity.getId(), busEntity.getDepartureDate(), busEntity.getSeats(), busEntity.getPrice());
+
+        final var paymentMethod = PaymentMethod.PAYPAL;
+
+        final var notPaidReservationEntity = Optional.of(new ReservationEntity(reservationId, clientEntity, departureDate, busEntityList, null));
+        final var modifiedReservationEntity = new ReservationEntity(reservationId, clientEntity, departureDate, busEntityList, paymentMethod);
+        final var expectedReservation = new Reservation(reservationId, clientEntity.getId(), departureDate, new HashSet<>(List.of(bus)), PaymentMethod.PAYPAL);
+
+        when(reservationJPARepository.findById(reservationId)).thenReturn(notPaidReservationEntity);
+        when(reservationJPARepository.save(modifiedReservationEntity)).thenReturn(modifiedReservationEntity);
+
+        final var actual = reservationService.pay(reservationId, paymentMethod);
+
+        assertEquals(expectedReservation, actual);
     }
 }

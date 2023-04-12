@@ -16,11 +16,14 @@ public class Reservation {
 
     private final Set<Bus> busses;
 
-    public Reservation(UUID id, UUID clientId, LocalDate departureDate, Set<Bus> busses) {
+    private final PaymentMethod paymentMethod;
+
+    public Reservation(UUID id, UUID clientId, LocalDate departureDate, Set<Bus> busses, PaymentMethod paymentMethod) {
         this.id = id;
         this.clientId = clientId;
         this.departureDate = departureDate;
         this.busses = busses;
+        this.paymentMethod = paymentMethod;
     }
 
     public UUID getId() {
@@ -39,16 +42,20 @@ public class Reservation {
         return busses;
     }
 
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
-        return Objects.equals(id, that.id) && Objects.equals(clientId, that.clientId) && Objects.equals(departureDate, that.departureDate) && Objects.equals(busses, that.busses);
+        return Objects.equals(id, that.id) && Objects.equals(clientId, that.clientId) && Objects.equals(departureDate, that.departureDate) && Objects.equals(busses, that.busses) && paymentMethod == that.paymentMethod;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, departureDate, busses);
+        return Objects.hash(id, clientId, departureDate, busses, paymentMethod);
     }
 }

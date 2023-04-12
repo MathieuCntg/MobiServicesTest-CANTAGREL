@@ -3,6 +3,7 @@ package com.example.backend.controllers;
 import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.domain.reservation.ReservationService;
 import com.example.backend.dtos.CreateReservationDTO;
+import com.example.backend.dtos.PayReservationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +36,10 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByID(@PathVariable UUID id) {
         reservationService.deleteById(id);
+    }
+
+    @PostMapping("/{id}/pay")
+    public Reservation pay(@PathVariable UUID id, @RequestBody PayReservationDTO payReservationDTO) {
+        return reservationService.pay(id, payReservationDTO.paymentMethod());
     }
 }

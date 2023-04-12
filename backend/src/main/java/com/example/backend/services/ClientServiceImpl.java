@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Reservation convertReservationEntityToReservation(ReservationEntity reservationEntity) {
-        return new Reservation(reservationEntity.getId(), reservationEntity.getClient().getId(), reservationEntity.getDepartureDate(), reservationEntity.getBusses().stream().map(this::convertBusEntityToBus).collect(Collectors.toSet()));
+        return new Reservation(reservationEntity.getId(), reservationEntity.getClient().getId(), reservationEntity.getDepartureDate(), reservationEntity.getBusses().stream().map(this::convertBusEntityToBus).collect(Collectors.toSet()), reservationEntity.getPaymentMethod());
     }
 
     private Bus convertBusEntityToBus(BusEntity busEntity) {

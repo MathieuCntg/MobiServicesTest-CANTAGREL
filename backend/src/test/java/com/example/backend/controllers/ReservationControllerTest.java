@@ -1,9 +1,11 @@
 package com.example.backend.controllers;
 
 import com.example.backend.domain.bus.Bus;
+import com.example.backend.domain.reservation.PaymentMethod;
 import com.example.backend.domain.reservation.Reservation;
 import com.example.backend.domain.reservation.ReservationService;
 import com.example.backend.dtos.CreateReservationDTO;
+import com.example.backend.dtos.PayReservationDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,7 +44,7 @@ class ReservationControllerTest {
         final Set<UUID> bussesIds = Collections.emptySet();
         final Set<Bus> busses = Collections.emptySet();
 
-        final var expectedReservation = new Reservation(reservationId, clientId, departureDate, busses);
+        final var expectedReservation = new Reservation(reservationId, clientId, departureDate, busses, null);
 
         when(reservationService.create(departureDate, clientId, bussesIds)).thenReturn(expectedReservation);
 
@@ -60,7 +59,7 @@ class ReservationControllerTest {
 
     @Test
     void shouldGetAll() throws Exception {
-        final var expectedReservationList = List.of(new Reservation(UUID.randomUUID(), UUID.randomUUID(), LocalDate.now(), Collections.emptySet()));
+        final var expectedReservationList = List.of(new Reservation(UUID.randomUUID(), UUID.randomUUID(), LocalDate.now(), Collections.emptySet(), PaymentMethod.PAYPAL));
 
         when(reservationService.getAll()).thenReturn(expectedReservationList);
 
@@ -79,6 +78,29 @@ class ReservationControllerTest {
                         delete(SERVER_URI+"/"+id)
                 )
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldPay() throws Exception {
+        final var id = UUID.randomUUID();
+        final var paymentMethod = PaymentMethod.PAYPAL;
+        final var paymentInformation = Map.of("email", "email");
+
+        final var departureDate = LocalDate.now();
+        final var clientId = UUID.randomUUID();
+        final Set<Bus> busses = Collections.emptySet();
+
+        final var expectedReservation = new Reservation(id, clientId, departureDate, busses, paymentMethod);
+
+        when(reservationService.pay(id, paymentMethod)).thenReturn(expectedReservation);
+
+        mockMvc.perform(
+                        post(SERVER_URI + '/' + id + "/pay")
+                                .content(objectMapper.writeValueAsString(new PayReservationDTO(paymentMethod, paymentInformation)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedReservation), true));
     }
 
 }

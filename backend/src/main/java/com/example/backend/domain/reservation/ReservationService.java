@@ -13,4 +13,5 @@ public interface ReservationService {
 
     void deleteById(UUID id);
 
+    Reservation pay(UUID id, PaymentMethod paymentMethod);
 }
